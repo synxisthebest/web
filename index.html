@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng Game Tài Xỉu Hoàng Gia - Uy Tín, Thượng Lưu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header / Thanh điều hướng -->
+    <header>
+        <div class="logo">
+            <span>👑</span> ROYAL <span>TAI XIU</span>
+        </div>
+        
+        <div class="user-panel">
+            <!-- Theme Toggle Button -->
+            <button class="btn btn-outline" id="btn-theme-toggle" style="padding: 10px; border-radius: 50%; font-size: 1.1rem; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+                🌙
+            </button>
+
+            <!-- Hiện khi Đã đăng nhập -->
+            <div id="logged-in-panel" style="display: none; align-items: center; gap: 15px;">
+                <span id="user-display-name" style="font-weight: 600; color: #fff;">Tên tài khoản</span>
+                <div class="balance-card">
+                    <span class="coin-icon">💰</span>
+                    <span id="balance" class="balance-amount">0</span>đ
+                </div>
+                <button class="btn btn-primary" id="btn-open-deposit">
+                    <span>⚡</span> Nạp tiền
+                </button>
+                <button class="btn btn-outline" id="btn-admin-panel" style="display: none; border-color: #a855f7; color: #a855f7;">
+                    🛠️ Admin
+                </button>
+                <button class="btn btn-danger" id="btn-logout">
+                    Đăng xuất
+                </button>
+            </div>
+            
+            <!-- Hiện khi Chưa đăng nhập -->
+            <div id="logged-out-panel" style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" id="btn-open-login">Đăng nhập</button>
+                <button class="btn btn-primary" id="btn-open-register">Đăng ký</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main>
+        
+        <!-- Cột Trái: Khu vực chơi game -->
+        <div class="game-container">
+            
+            <!-- Arena card chứa đĩa bát xóc đĩa/tài xỉu -->
+            <div class="arena-card">
+                <div class="game-status" id="game-status">Đang chờ đặt cược...</div>
+                <div class="game-result-banner" id="result-banner"></div>
+                
+                <div class="dice-plate-area">
+                    <!-- Đĩa -->
+                    <div class="plate">
+                        <!-- 3 viên xúc xắc -->
+                        <div class="dice-wrapper" id="dice-wrapper">
+                            <div class="dice" id="dice-1" data-value="1">
+                                <div class="dot dot-1"></div><div class="dot dot-2"></div><div class="dot dot-3"></div>
+                                <div class="dot dot-4"></div><div class="dot dot-5"></div><div class="dot dot-6"></div>
+                                <div class="dot dot-7"></div><div class="dot dot-8"></div><div class="dot dot-9"></div>
+                            </div>
+                            <div class="dice" id="dice-2" data-value="2">
+                                <div class="dot dot-1"></div><div class="dot dot-2"></div><div class="dot dot-3"></div>
+                                <div class="dot dot-4"></div><div class="dot dot-5"></div><div class="dot dot-6"></div>
+                                <div class="dot dot-7"></div><div class="dot dot-8"></div><div class="dot dot-9"></div>
+                            </div>
+                            <div class="dice" id="dice-3" data-value="3">
+                                <div class="dot dot-1"></div><div class="dot dot-2"></div><div class="dot dot-3"></div>
+                                <div class="dot dot-4"></div><div class="dot dot-5"></div><div class="dot dot-6"></div>
+                                <div class="dot dot-7"></div><div class="dot dot-8"></div><div class="dot dot-9"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Nắp úp -->
+                    <div class="cup" id="dice-cup"></div>
+                </div>
+
+                <div style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-top: 10px;">
+                    Mẹo: Nhấn vào nắp úp 🎲 để bắt đầu lắc (hoặc ấn nút LẮC BÁT phía dưới)
+                </div>
+            </div>
+
+            <!-- Bảng cược Tài/Xỉu -->
+            <div class="betting-board">
+                <!-- Cược Xỉu -->
+                <div class="bet-option bet-option-xiu" id="option-xiu" data-type="xiu">
+                    <div class="my-bet-indicator" id="indicator-xiu">Đã cược: 0đ</div>
+                    <div class="bet-title">XỈU</div>
+                    <div class="bet-desc">Nhỏ (4 - 10) • 1 ăn 1</div>
+                    <div class="bet-stats">
+                        <span>Lượt cược: <strong id="bets-count-xiu">124</strong></span>
+                        <span>Tổng tiền: <strong id="bets-total-xiu">42,500,000đ</strong></span>
+                    </div>
+                </div>
+
+                <!-- Cược Tài -->
+                <div class="bet-option bet-option-tai" id="option-tai" data-type="tai">
+                    <div class="my-bet-indicator" id="indicator-tai">Đã cược: 0đ</div>
+                    <div class="bet-title">TÀI</div>
+                    <div class="bet-desc">Lớn (11 - 17) • 1 ăn 1</div>
+                    <div class="bet-stats">
+                        <span>Lượt cược: <strong id="bets-count-tai">156</strong></span>
+                        <span>Tổng tiền: <strong id="bets-total-tai">68,200,000đ</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Điều khiển tiền đặt cược -->
+            <div class="bet-controls">
+                <div class="panel-title">Chọn tiền đặt cược</div>
+                
+                <!-- Chips nhanh -->
+                <div class="chips-container">
+                    <button class="chip active" data-amount="10000">10K</button>
+                    <button class="chip" data-amount="50000">50K</button>
+                    <button class="chip" data-amount="100000">100K</button>
+                    <button class="chip" data-amount="500000">500K</button>
+                    <button class="chip" data-amount="1000000">1M</button>
+                    <button class="chip" data-amount="5000000">5M</button>
+                </div>
+
+                <!-- Ô nhập tiền thủ công và Nút hành động -->
+                <div class="bet-input-wrapper">
+                    <input type="number" class="bet-input-field" id="custom-bet-amount" placeholder="Nhập số tiền..." value="10000" min="1000">
+                    <button class="btn btn-outline" id="btn-clear-bet" style="padding: 12px 18px;">Hủy cược</button>
+                </div>
+
+                <button class="btn btn-primary btn-action-roll" id="btn-roll">
+                    <span>🎲</span> Lắc Bát & Mở Thưởng
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Cột Phải: Thống kê & Lịch sử -->
+        <aside>
+            <!-- Lịch sử Cầu (Roadmap) -->
+            <div class="sidebar-card">
+                <div class="panel-title">Thống kê Cầu (10 ván gần nhất)</div>
+                <div class="roadmap-grid" id="roadmap-grid">
+                    <!-- Generated by JS -->
+                </div>
+                <div style="display: flex; justify-content: space-around; font-size: 0.8rem; margin-top: 15px; color: var(--text-muted);">
+                    <span style="display:flex; align-items:center; gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-tai);"></span> Tài</span>
+                    <span style="display:flex; align-items:center; gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-xiu);"></span> Xỉu</span>
+                </div>
+            </div>
+
+            <!-- Nhật ký giao dịch / ván game -->
+            <div class="sidebar-card">
+                <div class="panel-title">Lịch sử Ván Chơi</div>
+                <div class="history-logs" id="history-logs">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Modals -->
+
+    <!-- Đăng ký -->
+    <div class="modal-overlay" id="modal-register">
+        <div class="modal-card">
+            <button class="modal-close">&times;</button>
+            <div class="modal-title">Đăng Ký Tài Khoản</div>
+            <form id="form-register">
+                <div class="form-group">
+                    <label class="form-label">Tên tài khoản</label>
+                    <input type="text" class="form-control" id="reg-username" required placeholder="Nhập tên đăng nhập...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mật khẩu</label>
+                    <input type="password" class="form-control" id="reg-password" required placeholder="Nhập mật khẩu...">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px; padding: 12px;">Đăng Ký</button>
+            </form>
+            <div class="modal-footer-link">
+                Đã có tài khoản? <a href="#" id="link-to-login">Đăng nhập ngay</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Đăng nhập -->
+    <div class="modal-overlay" id="modal-login">
+        <div class="modal-card">
+            <button class="modal-close">&times;</button>
+            <div class="modal-title">Đăng Nhập Hệ Thống</div>
+            <form id="form-login">
+                <div class="form-group">
+                    <label class="form-label">Tên tài khoản</label>
+                    <input type="text" class="form-control" id="login-username" required placeholder="Tên đăng nhập...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mật khẩu</label>
+                    <input type="password" class="form-control" id="login-password" required placeholder="Mật khẩu...">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px; padding: 12px;">Đăng Nhập</button>
+            </form>
+            <div class="modal-footer-link">
+                Chưa có tài khoản? <a href="#" id="link-to-register">Đăng ký mới</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nạp tiền -->
+    <div class="modal-overlay" id="modal-deposit">
+        <div class="modal-card">
+            <button class="modal-close">&times;</button>
+            <div class="modal-title">Nạp Tiền Hệ Thống (Mô Phỏng)</div>
+            
+            <div class="deposit-options">
+                <div class="deposit-opt active" data-bank="momo">MOMO</div>
+                <div class="deposit-opt" data-bank="vcb">VCB QR</div>
+                <div class="deposit-opt" data-bank="mbb">MB Bank</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Chọn số tiền nạp (VND)</label>
+                <select class="form-control" id="deposit-amount-select">
+                    <option value="50000">50,000đ</option>
+                    <option value="100000" selected>100,000đ</option>
+                    <option value="500000">500,000đ</option>
+                    <option value="1000000">1,000,000đ</option>
+                    <option value="5000000">5,000,000đ</option>
+                    <option value="10000000">10,000,000đ</option>
+                </select>
+            </div>
+
+            <!-- Mock QR code generated dynamically via SVG to keep it self-contained & look awesome -->
+            <div class="qr-container">
+                <svg viewBox="0 0 100 100" class="qr-image" style="width:100%; height:100%; display:block;">
+                    <rect width="100" height="100" fill="#fff"/>
+                    <!-- QR Mock patterns -->
+                    <rect x="5" y="5" width="20" height="20" fill="#121214"/>
+                    <rect x="9" y="9" width="12" height="12" fill="#fff"/>
+                    <rect x="12" y="12" width="6" height="6" fill="#121214"/>
+                    
+                    <rect x="75" y="5" width="20" height="20" fill="#121214"/>
+                    <rect x="79" y="9" width="12" height="12" fill="#fff"/>
+                    <rect x="82" y="12" width="6" height="6" fill="#121214"/>
+
+                    <rect x="5" y="75" width="20" height="20" fill="#121214"/>
+                    <rect x="9" y="79" width="12" height="12" fill="#fff"/>
+                    <rect x="12" y="82" width="6" height="6" fill="#121214"/>
+
+                    <!-- Random bits -->
+                    <rect x="35" y="10" width="5" height="15" fill="#121214"/>
+                    <rect x="45" y="5" width="15" height="5" fill="#121214"/>
+                    <rect x="55" y="20" width="10" height="5" fill="#121214"/>
+                    <rect x="30" y="30" width="40" height="5" fill="#121214"/>
+                    <rect x="40" y="45" width="20" height="20" fill="#a855f7"/> <!-- Cool purple accent core for banking logo -->
+                    <rect x="45" y="50" width="10" height="10" fill="#ff4757"/>
+                    
+                    <rect x="10" y="40" width="15" height="10" fill="#121214"/>
+                    <rect x="20" y="55" width="10" height="15" fill="#121214"/>
+                    <rect x="10" y="60" width="5" height="5" fill="#121214"/>
+                    
+                    <rect x="75" y="35" width="15" height="15" fill="#121214"/>
+                    <rect x="85" y="55" width="10" height="5" fill="#121214"/>
+                    <rect x="70" y="65" width="25" height="10" fill="#121214"/>
+                </svg>
+            </div>
+
+            <div style="font-size:0.75rem; text-align:center; color:var(--text-muted); margin-bottom:15px;">
+                Quét mã QR trên bằng ứng dụng Ngân hàng để thanh toán tự động.
+            </div>
+
+            <button class="btn btn-primary" id="btn-submit-deposit" style="width: 100%; justify-content: center; padding: 12px;">
+                Xác nhận đã chuyển khoản
+            </button>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div class="modal-overlay" id="modal-admin">
+        <div class="modal-card" style="max-width: 500px;">
+            <button class="modal-close">&times;</button>
+            <div class="modal-title" style="color: #a855f7; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span>🛠️</span> BẢNG ĐIỀU KHIỂN ADMIN
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Chọn tài khoản người dùng</label>
+                <select class="form-control" id="admin-user-select">
+                    <!-- Sẽ được thêm bằng JS -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Số tiền cần cộng (VND)</label>
+                <input type="number" class="form-control" id="admin-add-amount" placeholder="Nhập số tiền..." value="100000" min="1000">
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <button class="btn btn-primary" id="btn-admin-add" style="flex: 1; justify-content: center; background: linear-gradient(135deg, #2ed573, #26af5f); color: white; border: none; box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);">
+                    ➕ Cộng Tiền
+                </button>
+                <button class="btn btn-primary" id="btn-admin-subtract" style="flex: 1; justify-content: center; background: linear-gradient(135deg, #ff4757, #d63031); color: white; border: none; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);">
+                    ➖ Trừ Tiền
+                </button>
+            </div>
+            
+            <div style="margin-top: 25px; border-top: 1px solid var(--glass-border); padding-top: 15px;">
+                <div class="panel-title" style="font-size: 0.85rem; margin-bottom: 10px;">Danh sách tài khoản và số dư</div>
+                <div style="max-height: 150px; overflow-y: auto; font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px;" id="admin-users-list">
+                    <!-- Danh sách người dùng được tải qua JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
